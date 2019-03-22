@@ -1,0 +1,87 @@
+﻿Consider a list Ls of URLs of all web pages within a given site i.e. all URLs in the list have the same domain prefix (for example, http://www.fancysite.com).  The rest of each URL after stripping the prefix is a sequence of strings separated by a slash ‘/’ i.e. of the form /abc/xyz/pqs/.../lmn.html.
+
+The problem to be solved is to compute the number of URLs in Ls at a given level. A level is counted by the number of slashes (i.e. ‘/’ characters) in the URL after stripping the common domain prefix. For example, http://www.fancysite.com  is at level 0, http://www.fancysite.com/xyz/xyz.html  is at level 2, and so on. You may assume that the URLs in Ls are unique (i.e. Ls has no duplicates).
+
+
+//Algorithm: To count the number of URLs in List Ls at a given level.
+//Input: List Ls of URLs.
+//Output: Number of URLs at a Level 1,2,3,...
+//Processing:
+countUrl(List Ls of type HashMap<String,Integer>)
+{
+	For each key in Ls
+	{
+		count number of '/' and store in corressponding integer value
+	}
+	For each value in Ls
+	{
+		print number of occurences of value
+	}
+}
+
+
+//Java Program
+
+package ciscotest;
+import java.util.*;
+/**
+ *
+ * @author Chetana
+ */
+public class CountURL {
+public static void main(String args[])
+	{
+		HashMap<String,Integer> Ls=new HashMap<String,Integer>();
+		char urlChar = '/';
+		//Add elements
+		Ls.put("http://www.fancysite.com",0);
+		Ls.put("http://www.fancysite.com/x.html",0);
+		Ls.put("http://www.fancysite.com/y/z.html",0);
+		Ls.put("http://www.fancysite.com/abc.html",0);
+		Ls.put("http://www.fancysite.com/lmn.html",0);
+                System.out.println("Initial Values of Url" + Ls);
+		for(Map.Entry m:Ls.entrySet())
+		{
+			int count=-2;
+       			String url=new String(m.getKey().toString());
+			for (int i = 0; i < url.length(); i++)
+			{
+    				if (url.charAt(i) == urlChar)
+				{
+        				count++;
+    				}
+			}
+                        Ls.put(url,count);
+      		}
+                System.out.println("Values of  after determining the levels" + Ls);
+		HashMap<Integer,Integer> newHm = new  HashMap<Integer,Integer>();
+         	Iterator it = Ls.entrySet().iterator();
+            	while (it.hasNext())
+		{
+                	Map.Entry pair = (Map.Entry)it.next();
+                	if(newHm.containsKey(pair.getValue()))
+			{
+                   		newHm.put(Integer.parseInt(pair.getValue().toString()), Integer.parseInt(newHm.get(pair.getValue()).toString())+1 );
+                	}
+			else
+			{
+                 		newHm.put(Integer.parseInt(pair.getValue().toString()),1 );
+                	}
+                	Ls.put(pair.getKey().toString(),-1); // avoids a ConcurrentModificationException
+            	}
+                for(Map.Entry m1:newHm.entrySet())
+		{
+                    System.out.println("There are "+m1.getValue()+" urls at level "+m1.getKey());
+                }
+		
+	}
+}
+
+Output run:
+
+Initial Values of Url{http://www.fancysite.com/lmn.html=0, http://www.fancysite.com/abc.html=0, http://www.fancysite.com=0, http://www.fancysite.com/y/z.html=0, http://www.fancysite.com/x.html=0}
+Values of  after determining the levels{http://www.fancysite.com/lmn.html=1, http://www.fancysite.com/abc.html=1, http://www.fancysite.com=0, http://www.fancysite.com/y/z.html=2, http://www.fancysite.com/x.html=1}
+There are 1 urls at level 0
+There are 3 urls at level 1
+There are 1 urls at level 2
+BUILD SUCCESSFUL (total time: 1 second)
